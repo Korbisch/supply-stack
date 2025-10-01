@@ -2,16 +2,35 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
+	"github.com/korbisch/supply-stack/internal/config"
+	"github.com/korbisch/supply-stack/internal/database"
 )
 
 func main() {
-	// Load environment variables
-	if err := godotenv.Load("../.env"); err != nil {
-		log.Println("No .env file found")
+	// Load configuration
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatal("Failed to load configuration:", err)
+	}
+
+	// Set Gin mode
+	gin.SetMode(cfg.Server.GinMode)
+
+	// Connect to database
+	if err := database.Connect(&cfg.Database); err != nil {
+		log.Fatal("Failed to connect to database:", err)
+	}
+	defer func() {
+		if err := database.Close(); err != nil {
+			log.Fatal("Failed to close database connection", err)
+		}
+	}()
+
+	// Run migrations
+	if err := database.Migrate(); err != nil {
+		log.Fatal("Failed to run migrations:", err)
 	}
 
 	// Initialize Gin router
@@ -20,8 +39,9 @@ func main() {
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"status":  "ok",
-			"service": "supply-stack-api",
+			"status":   "ok",
+			"service":  "supply-stack-api",
+			"database": "connected",
 		})
 	})
 
@@ -33,14 +53,9 @@ func main() {
 		})
 	}
 
-	// Get port from environment or default to 8080
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	log.Printf("Server starting on port %s", port)
-	if err := router.Run(":" + port); err != nil {
+	// Start server
+	log.Printf("Server starting on port %s", cfg.Server.Port)
+	if err := router.Run(":" + cfg.Server.Port); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
 }
