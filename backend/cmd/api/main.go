@@ -1,6 +1,9 @@
 package main
 
 import (
+	"github.com/korbisch/supply-stack/internal/handlers"
+	"github.com/korbisch/supply-stack/internal/repository"
+	"github.com/korbisch/supply-stack/internal/routes"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -33,6 +36,12 @@ func main() {
 		log.Fatal("Failed to run migrations:", err)
 	}
 
+	// Initialize repositories
+	supplierRepo := repository.NewSupplierRepository(database.GetDB())
+
+	// Initialize handlers
+	supplierHandler := handlers.NewSupplierHandler(supplierRepo)
+
 	// Initialize Gin router
 	router := gin.Default()
 
@@ -48,9 +57,7 @@ func main() {
 	// API v1 group
 	v1 := router.Group("/api/v1")
 	{
-		v1.GET("/ping", func(c *gin.Context) {
-			c.JSON(200, gin.H{"message": "pong"})
-		})
+		routes.SetupSupplierRoutes(v1, supplierHandler)
 	}
 
 	// Start server
