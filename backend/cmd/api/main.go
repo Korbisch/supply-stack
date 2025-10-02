@@ -1,14 +1,16 @@
 package main
 
 import (
-	"github.com/korbisch/supply-stack/internal/handlers"
-	"github.com/korbisch/supply-stack/internal/repository"
-	"github.com/korbisch/supply-stack/internal/routes"
 	"log"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/korbisch/supply-stack/internal/config"
 	"github.com/korbisch/supply-stack/internal/database"
+	"github.com/korbisch/supply-stack/internal/handlers"
+	"github.com/korbisch/supply-stack/internal/repository"
+	"github.com/korbisch/supply-stack/internal/routes"
 )
 
 func main() {
@@ -44,6 +46,16 @@ func main() {
 
 	// Initialize Gin router
 	router := gin.Default()
+
+	// CORS middleware
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"}, // Vite default port
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
