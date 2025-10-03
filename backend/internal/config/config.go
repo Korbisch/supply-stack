@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -12,6 +13,7 @@ type Config struct {
 	Server   ServerConfig
 	Database DatabaseConfig
 	JWT      JWTConfig
+	CORS     CORSConfig
 }
 
 type ServerConfig struct {
@@ -33,6 +35,10 @@ type JWTConfig struct {
 	Expiration time.Duration
 }
 
+type CORSConfig struct {
+	AllowedOrigins []string
+}
+
 func Load() (*Config, error) {
 	if err := godotenv.Load(); err != nil {
 		fmt.Println("No .env file found, using environment variables")
@@ -41,6 +47,13 @@ func Load() (*Config, error) {
 	jwtExpiration, err := time.ParseDuration(getEnv("JWT_EXPIRATION", "24h"))
 	if err != nil {
 		jwtExpiration = 24 * time.Hour
+	}
+
+	// Parse CORS origins
+	corsOrigins := getEnv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000")
+	allowedOrigins := strings.Split(corsOrigins, ",")
+	for i, origin := range allowedOrigins {
+		allowedOrigins[i] = strings.TrimSpace(origin)
 	}
 
 	return &Config{
@@ -59,6 +72,9 @@ func Load() (*Config, error) {
 		JWT: JWTConfig{
 			Secret:     getEnv("JWT_SECRET", "change-this-secret-key"),
 			Expiration: jwtExpiration,
+		},
+		CORS: CORSConfig{
+			AllowedOrigins: allowedOrigins,
 		},
 	}, nil
 }
