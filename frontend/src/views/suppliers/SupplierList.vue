@@ -4,7 +4,7 @@
       <h1 class="text-3xl font-bold text-gray-800">Suppliers</h1>
       <button
         @click="navigateToCreate"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 cursor-pointer"
       >
         <span>+</span>
         <span>Add Supplier</span>
@@ -93,19 +93,19 @@
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
             <button
               @click="viewSupplier(supplier.id!)"
-              class="text-blue-600 hover:text-blue-900 mr-3"
+              class="text-blue-600 hover:text-blue-900 mr-3 cursor-pointer"
             >
               View
             </button>
             <button
               @click="editSupplier(supplier.id!)"
-              class="text-green-600 hover:text-green-900 mr-3"
+              class="text-green-600 hover:text-green-900 mr-3 cursor-pointer"
             >
               Edit
             </button>
             <button
               @click="confirmDelete(supplier)"
-              class="text-red-600 hover:text-red-900"
+              class="text-red-600 hover:text-red-900 cursor-pointer"
             >
               Delete
             </button>
@@ -122,9 +122,9 @@
         </div>
         <div class="flex gap-2">
           <button
-            @click="goToPage(store.pagination.page - 1)"
             :disabled="store.pagination.page === 1"
-            :class="store.pagination.page === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
+            :class="store.pagination.page === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 cursor-pointer'"
+            @click="goToPage(store.pagination.page - 1)"
             class="px-3 py-1 border border-gray-300 rounded bg-white"
           >
             Previous
@@ -135,7 +135,7 @@
           <button
             @click="goToPage(store.pagination.page + 1)"
             :disabled="store.pagination.page === store.pagination.total_pages"
-            :class="store.pagination.page === store.pagination.total_pages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
+            :class="store.pagination.page === store.pagination.total_pages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 cursor-pointer'"
             class="px-3 py-1 border border-gray-300 rounded bg-white"
           >
             Next
