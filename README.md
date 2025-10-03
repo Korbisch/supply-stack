@@ -56,8 +56,7 @@ Default values work out of the box. Edit .env only if you need custom configurat
 - **Go 1.25** - High-performance backend
 - **Gin** - HTTP web framework
 - **GORM** - ORM for database operations
-- **PostgreSQL** - Relational database
-- **JWT** - Authentication (ready for implementation)
+- **Postgres** - Relational database
 
 ### Frontend
 - **Vue 3** - Progressive JavaScript framework
