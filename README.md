@@ -2,6 +2,8 @@
 
 A modern procurement and supplier management platform built with Go, Vue.js, and Docker.
 
+I documented my learnings in a blog post: [Learning Go and Vue with Claude AI as my Pair Programmer](https://medium.com/@korbinian.schleifer.cs/learning-go-and-vue-with-claude-ai-as-my-pair-programmer-b2d634e291eb)
+
 ![Supply-Stack Dashboard](screenshots/supplier-list.png)
 
 # Table of Contents
